@@ -1,5 +1,5 @@
 {
-  "name": "tts-app",
+  "name": "stt-app",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

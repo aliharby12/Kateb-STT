@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { sendAudioForTranscription } from "../../api";
 import { toast } from "react-toastify";
 
-const TTS = ({ username, password }) => {
+const STT = ({ username, password }) => {
     const [file, setFile] = useState(null); // State to store the uploaded file
     const [transcription, setTranscription] = useState(""); // State to store the transcription result
 
@@ -44,4 +44,4 @@ const TTS = ({ username, password }) => {
     );
 };
 
-export default TTS;
+export default STT;

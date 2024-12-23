@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
-import TTS from "./components/TTS/TTS";
+import STT from "./components/STT/STT";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -17,7 +17,7 @@ const App = () => {
         <Route path="/login" element={<Login setToken={setToken} />} />
         <Route
           path="/speech-to-text"
-          element={token ? <TTS token={token} /> : <Navigate to="/login" />}
+          element={token ? <STT token={token} /> : <Navigate to="/login" />}
         />
       </Routes>
     </Router>
