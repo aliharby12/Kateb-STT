@@ -1,36 +1,43 @@
 import React, { useState } from "react";
-import { getTTS } from "../../api";
+import { sendAudioForTranscription } from "../../api";
 import { toast } from "react-toastify";
 
-const TTS = ({ token }) => {
-    const [text, setText] = useState("");
-    const [audioUrl, setAudioUrl] = useState(null);
+const TTS = ({ username, password }) => {
+    const [file, setFile] = useState(null); // State to store the uploaded file
+    const [transcription, setTranscription] = useState(""); // State to store the transcription result
 
-    const handleTTS = async () => {
+    const handleFileChange = (e) => {
+        setFile(e.target.files[0]);
+    };
+
+    const handleSubmit = async () => {
+        if (!file) {
+            toast.error("Please upload a .wav file!");
+            return;
+        }
+
         try {
-            const response = await getTTS(text, token);
-            setAudioUrl(response.data.audio_url); // Assume the response contains an audio URL
-            toast.success("TTS successful!");
+            const response = await sendAudioForTranscription(file, username, password);
+            setTranscription(response.data.transcription); // Assuming the backend returns 'transcription'
+            toast.success("Transcription successful!");
         } catch (error) {
-            toast.error(error.response?.data?.error || "TTS failed.");
+            toast.error(
+                error.response?.data?.error || "An error occurred during transcription."
+            );
         }
     };
 
     return (
         <div>
-            <h2>Text-to-Speech</h2>
-            <textarea
-                placeholder="Enter text"
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-            ></textarea>
-            <button onClick={handleTTS}>Generate Speech</button>
-            {audioUrl && (
+            <h2>Speech-to-Text</h2>
+            <div>
+                <input type="file" accept=".wav" onChange={handleFileChange} />
+                <button onClick={handleSubmit}>Transcribe</button>
+            </div>
+            {transcription && (
                 <div>
-                    <audio controls>
-                        <source src={audioUrl} type="audio/mpeg" />
-                        Your browser does not support the audio element.
-                    </audio>
+                    <h3>Transcription Result:</h3>
+                    <p>{transcription}</p>
                 </div>
             )}
         </div>
