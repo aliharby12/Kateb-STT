@@ -7,6 +7,14 @@ from .serializers import LoginSerializer, RegisterSerializer
 
 
 class RegisterView(APIView):
+    """
+    API view for user registration.
+
+    Allows users to register by providing a username, email,
+    password, and password confirmation. Ensures validation
+    of user data and creation of a new user in the system.
+    """
+
     permission_classes = []
 
     def post(self, request):
@@ -20,6 +28,13 @@ class RegisterView(APIView):
 
 
 class LoginView(APIView):
+    """
+    API view for user login.
+
+    Authenticates users by validating their username and password.
+    If successful, logs the user in and returns a success message.
+    """
+
     permission_classes = []
 
     def post(self, request):

@@ -4,6 +4,13 @@ from django.contrib.auth.password_validation import validate_password
 
 
 class RegisterSerializer(serializers.ModelSerializer):
+    """
+    Serializer for user registration.
+
+    Handles validation for username, email, password, and password confirmation.
+    Ensures the passwords match and creates a new user in the database.
+    """
+
     password = serializers.CharField(
         write_only=True, required=True, validators=[validate_password]
     )
@@ -28,6 +35,12 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 class LoginSerializer(serializers.Serializer):
+    """
+    Serializer for user login.
+
+    Handles validation of username and password fields.
+    """
+
     username = serializers.CharField()
     password = serializers.CharField(
         write_only=True, required=True, validators=[validate_password]
