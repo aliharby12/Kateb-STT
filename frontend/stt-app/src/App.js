@@ -12,7 +12,6 @@ const App = () => {
     password: localStorage.getItem("password"),
 
   });
-  console.log(localStorage.getItem("username"), localStorage.getItem("password"))
   useEffect(() => {
     if (auth.username && auth.password) {
       localStorage.setItem("username", auth.username);

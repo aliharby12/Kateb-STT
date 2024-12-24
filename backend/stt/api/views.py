@@ -58,7 +58,6 @@ class SpeechToTextView(APIView):
             if response.status_code == 200:
 
                 # Get the total seconds
-                print(response.json())
                 audio_duration_seconds = response.json()["total_duration"]
                 if (
                     user_profile.used_seconds + audio_duration_seconds
