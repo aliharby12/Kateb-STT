@@ -1,19 +1,17 @@
 import React, { useState } from "react";
-import { loginUser } from "../../api";
 import { toast } from "react-toastify";
 
-const Login = ({ setToken }) => {
+const Login = ({ setAuth }) => {
     const [credentials, setCredentials] = useState({ username: "", password: "" });
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        try {
-            const response = await loginUser(credentials);
-            setToken(response.data.token); // Assume token is returned in response
-            toast.success("Login successful!");
-        } catch (error) {
-            toast.error(error.response?.data?.error || "Login failed.");
+        if (!credentials.username || !credentials.password) {
+            toast.error("Username and password are required!");
+            return;
         }
+        setAuth(credentials); // Update App state
+        toast.success("Login successful!");
     };
 
     return (
