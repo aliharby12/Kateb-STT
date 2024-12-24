@@ -27,6 +27,16 @@ class SpeechToTextView(APIView):
         # Get the STT system URL from environment variables
         stt_url = config("STT_API_URL", default="https://example.com/stt")
 
+        # Check the user quota
+        user_profile = request.user.userprofile
+        if user_profile.used_seconds >= user_profile.audio_quota_seconds:
+            return Response(
+                {
+                    "error": "Quota exceeded. Please contact support to extend your quota."
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
         # Validate the incoming file using the serializer
         serializer = AudioUploadSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -46,6 +56,21 @@ class SpeechToTextView(APIView):
 
             # Check if the request to the STT system was successful
             if response.status_code == 200:
+
+                # Get the total seconds
+                print(response.json())
+                audio_duration_seconds = response.json()["total_duration"]
+                if (
+                    user_profile.used_seconds + audio_duration_seconds
+                    > user_profile.audio_quota_seconds
+                ):
+                    return Response(
+                        {"error": "Not enough quota for this file."},
+                        status=status.HTTP_403_FORBIDDEN,
+                    )
+
+                user_profile.used_seconds += audio_duration_seconds
+                user_profile.save()
                 # Return the transcription result to the client
                 return Response(response.json(), status=status.HTTP_200_OK)
             else:

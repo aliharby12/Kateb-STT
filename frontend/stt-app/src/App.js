@@ -10,8 +10,9 @@ const App = () => {
   const [auth, setAuth] = useState({
     username: localStorage.getItem("username"),
     password: localStorage.getItem("password"),
-  });
 
+  });
+  console.log(localStorage.getItem("username"), localStorage.getItem("password"))
   useEffect(() => {
     if (auth.username && auth.password) {
       localStorage.setItem("username", auth.username);

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 import { registerUser } from "../../api";
 import { toast } from "react-toastify";
 
@@ -10,6 +11,8 @@ const Register = () => {
         password2: "",
     });
 
+    const navigate = useNavigate(); // Initialize navigate function
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (formData.password !== formData.password2) {
@@ -18,8 +21,9 @@ const Register = () => {
         }
 
         try {
-            await registerUser(formData); // Pass formData to API
-            toast.success("Registration successful!");
+            await registerUser(formData); // Call API to register user
+            toast.success("Registration successful! Redirecting to login...");
+            navigate("/login"); // Redirect to login page after success
         } catch (error) {
             toast.error(error.response?.data?.error || "Registration failed.");
         }

@@ -1,17 +1,33 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import { loginUser } from "../../api";
 import { toast } from "react-toastify";
 
 const Login = ({ setAuth }) => {
     const [credentials, setCredentials] = useState({ username: "", password: "" });
+    const navigate = useNavigate(); // Initialize navigate function
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!credentials.username || !credentials.password) {
-            toast.error("Username and password are required!");
+            toast.error("Both username and password are required!");
             return;
         }
-        setAuth(credentials); // Update App state
-        toast.success("Login successful!");
+
+        try {
+            const response = await loginUser(credentials); // Call API to authenticate user
+
+            if (response.status === 200) {
+                setAuth({ username: credentials.username, password: credentials.password }); // Save credentials
+                toast.success("Login successful! Redirecting to Speech-to-Text...");
+                navigate("/tts"); // Redirect to STT page
+            } else {
+                const errorData = response.data;
+                toast.error(errorData?.error || "Login failed.");
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.error || "Login failed.");
+        }
     };
 
     return (
