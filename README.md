@@ -2,6 +2,16 @@
 
 This is a **Speech-to-Text (STT)** application built using **Django REST Framework (DRF)** for the backend and **React.js** for the frontend. The app provides user authentication (Register and Login) and enables users to upload or record audio files to transcribe speech into text. Users can also play back audio with synchronized word highlighting.
 
+## Screenshots
+
+### Register Page
+![Register Page](./screenshots/register.png "Register Page")
+
+### Login Page
+![Login Page](./screenshots/login.png "Login Page")
+
+### STT Page (Audio Transcription)
+![STT Page](./screenshots/stt.png "STT Page")
 
 ## Features
 
