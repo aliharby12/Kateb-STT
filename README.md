@@ -2,7 +2,6 @@
 
 This is a **Speech-to-Text (STT)** application built using **Django REST Framework (DRF)** for the backend and **React.js** for the frontend. The app provides user authentication (Register and Login) and enables users to upload or record audio files to transcribe speech into text. Users can also play back audio with synchronized word highlighting.
 
----
 
 ## Features
 
@@ -13,7 +12,6 @@ This is a **Speech-to-Text (STT)** application built using **Django REST Framewo
 - **Playback with Highlighting**: Plays the audio file while highlighting the transcribed words in real-time.
 - **User Quota Management**: Limits the total audio duration users can transcribe, configurable in the Django admin panel.
 
----
 
 ## Technologies
 
@@ -27,7 +25,6 @@ This is a **Speech-to-Text (STT)** application built using **Django REST Framewo
 - **Axios** for API communication
 - **Tailwind CSS** for styling
 
----
 
 ## Installation and Setup
 
@@ -36,7 +33,6 @@ This is a **Speech-to-Text (STT)** application built using **Django REST Framewo
 - Node.js and npm/yarn
 - Git
 
----
 
 ### Backend Setup
 
@@ -100,7 +96,6 @@ The backend will run at [http://localhost:8000](http://localhost:8000).
 
 The frontend will run at [http://localhost:3000](http://localhost:3000).
 
----
 
 ## Testing
 
@@ -110,7 +105,6 @@ Run the backend test suite:
 python manage.py test
 ```
 
----
 
 ## Usage
 
@@ -119,7 +113,6 @@ python manage.py test
 3. Upload a `.wav` file or record audio directly.
 4. Click "Transcribe" to see the transcription result with synchronized word highlighting.
 
----
 
 ## API Endpoints
 
@@ -130,7 +123,6 @@ python manage.py test
 ### Speech-to-Text
 - **Transcription**: `/api/stt/speech-to-text/`
 
----
 
 ## License
 
