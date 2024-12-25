@@ -20,7 +20,7 @@ const Login = ({ setAuth }) => {
             if (response.status === 200) {
                 setAuth({ username: credentials.username, password: credentials.password });
                 toast.success("Login successful! Redirecting to Speech-to-Text...");
-                navigate("/tts");
+                navigate("/speech-to-text/");
             } else {
                 const errorData = response.data;
                 toast.error(errorData?.error || "Login failed.");

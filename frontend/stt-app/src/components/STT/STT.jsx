@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import Recorder from "recorder-js";
 import { sendAudioForTranscription } from "../../api";
 import { toast } from "react-toastify";
 
@@ -6,31 +7,78 @@ const TTS = ({ username, password }) => {
     const [file, setFile] = useState(null);
     const [words, setWords] = useState([]);
     const [audioSrc, setAudioSrc] = useState(null);
-    const [loading, setLoading] = useState(false); // Loading state
+    const [loading, setLoading] = useState(false);
+    const [isRecording, setIsRecording] = useState(false);
+    const [recordedFile, setRecordedFile] = useState(null);
+
+    const recorderRef = useRef(null);
     const audioRef = useRef(null);
     const [currentWordIndex, setCurrentWordIndex] = useState(null);
 
+    const initializeRecorder = async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            recorderRef.current = new Recorder(audioContext);
+            recorderRef.current.init(stream);
+        } catch (error) {
+            toast.error("Microphone access denied or not available.");
+        }
+    };
+
     const handleFileChange = (e) => {
+        if (e.target.files[0]?.type !== "audio/wav") {
+            toast.error("Only .wav files are allowed!");
+            return;
+        }
         setFile(e.target.files[0]);
         setAudioSrc(URL.createObjectURL(e.target.files[0]));
+        setRecordedFile(null); // Reset recorded file when a new file is uploaded
+    };
+
+    const handleRecordStart = async () => {
+        if (!recorderRef.current) {
+            await initializeRecorder();
+        }
+        recorderRef.current.start();
+        setIsRecording(true);
+    };
+
+    const handleRecordStop = async () => {
+        if (recorderRef.current) {
+            const { blob } = await recorderRef.current.stop();
+            const file = new File([blob], "recorded_audio.wav", { type: "audio/wav" });
+            setRecordedFile(file);
+            setAudioSrc(URL.createObjectURL(file));
+            setFile(null); // Reset file input when recording is complete
+            setIsRecording(false);
+        }
     };
 
     const handleSubmit = async () => {
-        if (!file) {
-            toast.error("Please upload a .wav file!");
+        if (!file && !recordedFile) {
+            toast.error("Please upload a file or record audio!");
             return;
         }
 
-        setLoading(true); // Start loading
+        setLoading(true);
         try {
-            const response = await sendAudioForTranscription(file, username, password);
+            const formData = new FormData();
+            const audioToSend = file || recordedFile;
+
+            // Append the file to FormData
+            formData.append("file", audioToSend);
+
+            // Make the request using the API call function
+            const response = await sendAudioForTranscription(formData, username, password);
+
             const { json } = response.data;
             setWords(json.words);
             toast.success("Transcription successful!");
         } catch (error) {
-            toast.error(error.response?.data?.error || "An error occurred during transcription.");
+            toast.error(error.response?.data?.file?.[0] || "An error occurred during transcription.");
         } finally {
-            setLoading(false); // End loading
+            setLoading(false);
         }
     };
 
@@ -55,13 +103,25 @@ const TTS = ({ username, password }) => {
                         type="file"
                         accept=".wav"
                         onChange={handleFileChange}
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-4"
                     />
+                </div>
+                <div className="mb-6">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                        Or Record Audio
+                    </label>
+                    <button
+                        onClick={isRecording ? handleRecordStop : handleRecordStart}
+                        className={`w-full ${isRecording ? "bg-red-500 hover:bg-red-700" : "bg-green-500 hover:bg-green-700"
+                            } text-white font-bold py-2 px-4 rounded`}
+                    >
+                        {isRecording ? "Stop Recording" : "Start Recording"}
+                    </button>
                 </div>
                 <button
                     onClick={handleSubmit}
                     className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                    disabled={loading} // Disable the button while loading
+                    disabled={loading}
                 >
                     {loading ? "Processing..." : "Transcribe"}
                 </button>
@@ -91,11 +151,11 @@ const TTS = ({ username, password }) => {
                     <h3 className="text-xl font-semibold mb-4">Transcription Result</h3>
                     <div
                         className="flex flex-wrap gap-2 justify-end"
-                        style={{ direction: "ltr" }} // Add RTL direction
+                        style={{ direction: "rtl" }}
                     >
                         {words
-                            .slice() // Create a copy of the array
-                            .reverse() // Reverse the array for correct RTL order
+                            .slice()
+                            .reverse()
                             .map((word, index) => (
                                 <span
                                     key={index}
@@ -115,7 +175,6 @@ const TTS = ({ username, password }) => {
                     </div>
                 </div>
             )}
-
         </div>
     );
 };

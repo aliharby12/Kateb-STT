@@ -36,7 +36,7 @@ const App = () => {
           }
         />
         <Route
-          path="/tts"
+          path="/speech-to-text/"
           element={
             auth.username && auth.password ? (
               <STT username={auth.username} password={auth.password} />
