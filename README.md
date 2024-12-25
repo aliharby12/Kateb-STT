@@ -78,7 +78,12 @@ This is a **Speech-to-Text (STT)** application built using **Django REST Framewo
    python3 manage.py migrate
    ```
 
-6. Start the backend server:
+6. Create a superuser to manage the admin panel to manage user quotas:
+   ```bash
+   python3 manage.py createsuperuser
+   ```
+
+7. Start the backend server:
    ```bash
    python3 manage.py runserver
    ```
