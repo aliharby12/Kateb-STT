@@ -63,14 +63,10 @@ const TTS = ({ username, password }) => {
 
         setLoading(true);
         try {
-            const formData = new FormData();
             const audioToSend = file || recordedFile;
 
-            // Append the file to FormData
-            formData.append("file", audioToSend);
-
             // Make the request using the API call function
-            const response = await sendAudioForTranscription(formData, username, password);
+            const response = await sendAudioForTranscription(audioToSend, username, password);
 
             const { json } = response.data;
             setWords(json.words);
@@ -151,7 +147,7 @@ const TTS = ({ username, password }) => {
                     <h3 className="text-xl font-semibold mb-4">Transcription Result</h3>
                     <div
                         className="flex flex-wrap gap-2 justify-end"
-                        style={{ direction: "rtl" }}
+                        style={{ direction: "ltr" }}
                     >
                         {words
                             .slice()
