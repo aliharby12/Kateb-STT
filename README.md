@@ -48,13 +48,13 @@ This is a **Speech-to-Text (STT)** application built using **Django REST Framewo
 
 1. Clone the repository and navigate to the backend directory:
    ```bash
-   git clone https://github.com/aliharby12/Kateb-STT
+   git clone git@github.com:aliharby12/Kateb-STT.git
    cd backend
    ```
 
 2. Create and activate a virtual environment:
    ```bash
-   python -m venv venv
+   python3 -m venv venv
    source venv/bin/activate  # For Linux/Mac
    venv\Scripts\activate     # For Windows
    ```
@@ -74,13 +74,13 @@ This is a **Speech-to-Text (STT)** application built using **Django REST Framewo
 
 5. Run database migrations:
    ```bash
-   python manage.py makemigrations
-   python manage.py migrate
+   python3 manage.py makemigrations
+   python3 manage.py migrate
    ```
 
 6. Start the backend server:
    ```bash
-   python manage.py runserver
+   python3 manage.py runserver
    ```
 
 The backend will run at [http://localhost:8000](http://localhost:8000).
@@ -91,7 +91,7 @@ The backend will run at [http://localhost:8000](http://localhost:8000).
 
 1. Navigate to the frontend directory:
    ```bash
-   cd frontend
+   cd frontend/stt-app/
    ```
 
 2. Install dependencies:
@@ -99,7 +99,12 @@ The backend will run at [http://localhost:8000](http://localhost:8000).
    npm install
    ```
 
-3. Start the frontend development server:
+3. Configure the backend API URL: Open the file where `API_BASE_URL` is defined (e.g., `src/api.js`) and replace the default value with your backend URL::
+   ```bash
+   const API_BASE_URL = "http://localhost:8000/api"; // Replace with your backend URL
+   ```
+
+4. Start the frontend development server:
    ```bash
    npm start
    ```
@@ -112,7 +117,7 @@ The frontend will run at [http://localhost:3000](http://localhost:3000).
 ### Backend Testing
 Run the backend test suite:
 ```bash
-python manage.py test
+python3 manage.py test
 ```
 
 
